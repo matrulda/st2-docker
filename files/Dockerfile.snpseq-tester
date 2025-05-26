@@ -37,6 +37,8 @@ RUN mkdir -p /data/scratch
 RUN mkdir -p /data/uppmax_project/incoming/staging/reports
 RUN mkdir -p /data/uppmax_project/incoming/staging/test_runfolder/seqreports
 RUN mkdir -p /data/snpseq-tester/runfolders/Arkiverade
+RUN touch /data/snpseq-tester/runfolders/Arkiverade/new_file
+RUN touch -a -m -t 202501010101 /data/snpseq-tester/runfolders/Arkiverade/old_file
 RUN mkdir -p /data/olink
 RUN mkdir -p /var/log/nginx/
 RUN mkdir -p /etc/arteria/misc/
