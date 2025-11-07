@@ -28,7 +28,7 @@ The image version, exposed ports, chatops, and "packs.dev" directory are configu
 - **ST2_VERSION** this is the tag at the end of the docker image (ie: stackstorm/st2api:v3.3.0)
 - **ST2_IMAGE_REPO** The image or path to the images. Default is "stackstorm/".  You may change this is using the Enterprise version or a private docker repository.
 - **ST2_EXPOSE_HTTP**  Port to expose st2web port 80 on.  Default is `127.0.0.1:80`, and you may want to do `0.0.0.0:80` to expose on all interfaces.
-- **ST2_PACKS_DEV** Directory to development packs, absolute or relative to docker compose.yml. This allows you to develop packs locally. Default is `./packs.dev`. When making a number of packs, it is recommended to make a directory outside of st2-docker, with each subdirectory underneath that being an independent git repo.  Example: `ST2_PACKS_DEV=${HOME}/mypacks`, with `${HOME}/mypacks/st2-helloworld` being a git repo for the "helloworld" pack.
+- **ST2_PACKS_DEV** Directory to development packs, absolute or relative to docker-compose.yml. This allows you to develop packs locally. Default is `./packs.dev`. When making a number of packs, it is recommended to make a directory outside of st2-docker, with each subdirectory underneath that being an independent git repo.  Example: `ST2_PACKS_DEV=${HOME}/mypacks`, with `${HOME}/mypacks/st2-helloworld` being a git repo for the "helloworld" pack.
 - **ST2_CHATOPS_ENABLE** To enable chatops, set this variable to any non-zero value.  Also ensure that your environment settings are configured for your chatops adapter (see the `st2chatops` service `environment` comments/settings for more info)
 - **HUBOT_ADAPTER** Chat service adapter to use (see https://docs.stackstorm.com/chatops/)
 - **HUBOT_SLACK_TOKEN** If using the [Slack](https://github.com/slackapi/hubot-slack) adapter, this is your "Bot User OAuth Access Token"
@@ -50,11 +50,11 @@ The base st2 docker images have a built-in `/etc/st2/st2.conf` configuration fil
 Review `st2.docker.conf` for currently set values, and it is recommended to place overrides in `st2.user.conf`.
 
 If you want to utilize a custom config for StackStorm Web UI (st2web container), you can do that by editing
-`files/config.js` file and mounting it as a volume inside the container as per example in `docker compose.yml`.
+`files/config.js` file and mounting it as a volume inside the container as per example in `docker-compose.yml`.
 
 #### Chatops configuration
 
-Chatops settings are configured in the `environment` section for the `st2chatops` service in `docker compose.yml`
+Chatops settings are configured in the `environment` section for the `st2chatops` service in `docker-compose.yml`
 
 Set `ST2_CHATOPS_ENABLE` to any non-zero value, then edit the various `HUBOT_` variables specific to your chatops adapter.
 See https://github.com/StackStorm/st2chatops/blob/master/st2chatops.env for the full list of supported adapters and example ENV variables.
@@ -130,9 +130,9 @@ To stop the docker environment, run:
 docker compose down
 ```
 
-If you make changes to docker compose.yml you may want to ensure that old volumes etc. are removed:
+If you make changes to docker-compose.yml you may want to ensure that old volumes etc. are removed:
 ```shell
-docker compose down --remove-orphans -v
+docker volume prune --all
 ```
 
 ### Gotchas
@@ -152,7 +152,7 @@ The fix is to disable SELinux (or to put it in permissive mode).
 #### Chatops
 
 * Chatops has been minimally tested using the Slack hubot adapter.  Other adapter types may require some
-tweaking to the environment settings for the `st2chatops` service in `docker compose.yml`
+tweaking to the environment settings for the `st2chatops` service in `docker-compose.yml`
 
 * The git status output on the `!packs get` command doesn't appear to work fully.
 
@@ -303,7 +303,7 @@ If you are working on a development pack, you will need to register it and insta
 
 ### packs.dev directory
 
-As mentioned above, your default `packs.dev` directory is relative to your `docker compose.yml` file. However, if you start developing here, git will not like being inside another git directory. You will want to set `ST2_PACKS_DEV` to a directory outside of `st2-docker` and restart the docker compose services.
+As mentioned above, your default `packs.dev` directory is relative to your `docker-compose.yml` file. However, if you start developing here, git will not like being inside another git directory. You will want to set `ST2_PACKS_DEV` to a directory outside of `st2-docker` and restart the docker compose services.
 
 Example: We have a pack called helloworld in `packs.dev/helloworld`. The directory name has to match the pack name. So even if you have a git repo named "st2-helloworld", it should be cloned locally as "helloworld".
 
