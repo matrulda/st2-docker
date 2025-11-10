@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   st2web:
     image: ${ST2_IMAGE_REPO:-stackstorm/}st2web:${ST2_VERSION:-latest}

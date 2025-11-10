@@ -1,5 +1,8 @@
 # Changelog
 
+## 2025-09-23 
+* Change docker-compose to docker compose
+
 ## 2022-05-06
 * Migrate to Ubuntu 20 / Python 3.8 based containers
 

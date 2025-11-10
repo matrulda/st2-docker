@@ -2,14 +2,14 @@
 
 [![CI Build Status](https://github.com/StackStorm/st2-docker/actions/workflows/st2-docker.yml/badge.svg)](https://github.com/StackStorm/st2-docker/actions/workflows/st2-docker.yml)
 
-This docker-compose is provided as a way to allow "get up and running" quickly with StackStorm using Docker (based on [st2-dockerfiles](https://github.com/stackstorm/st2-dockerfiles)). It is not designed to be used in production, but rather a way to test out StackStorm and facilitate pack development.
+This docker compose is provided as a way to allow "get up and running" quickly with StackStorm using Docker (based on [st2-dockerfiles](https://github.com/stackstorm/st2-dockerfiles)). It is not designed to be used in production, but rather a way to test out StackStorm and facilitate pack development.
 > If you need Highly Availability experience, there is Kubernetes installation available via Helm charts at https://docs.stackstorm.com/install/k8s_ha.html.
 
 ## TL;DR
 
 ```shell
-docker-compose up -d && ./scripts/snpseq/startup.sh # this starts the containers and installs snpseq_packs
-docker-compose exec st2client bash  # this gives you access to the st2 command line
+docker compose up -d && ./scripts/snpseq/startup.sh # this starts the containers and installs snpseq_packs
+docker compose exec st2client bash  # this gives you access to the st2 command line
 ```
 
 Open `http://localhost/` in your browser. StackStorm Username/Password by default is: `st2admin/Ch@ngeMe`.
@@ -19,7 +19,7 @@ Open `http://localhost/` in your browser. StackStorm Username/Password by defaul
 ### Prerequisites
 
 - [Docker Engine](https://www.docker.com/products/container-runtime) 20.04+
-- [Docker Compose](https://docs.docker.com/compose/install) 1.12+
+- [Docker Compose](https://docs.docker.com/compose/install) 2+
 
 ### Compose Configuration
 
@@ -64,7 +64,7 @@ You will also need an st2 API key for chatops.  This should be set in `ST2_API_K
 To generate an API key, see the [StackStorm documentation](https://docs.stackstorm.com/authentication.html#api-keys).
 
 _Note:_ If you are standing up st2 for the first time, you may first need to start with chatops initially disabled so you can generate
-an API key.  Once this is done, set it in `ST2_API_KEY`, enable chatops as per above and `docker-compose restart` to
+an API key.  Once this is done, set it in `ST2_API_KEY`, enable chatops as per above and `docker compose restart` to
 restart your st2 stack.
 
 #### RBAC Configuration
@@ -119,7 +119,7 @@ enable_common_libs = True
 Third, start the docker environment:
 
 ```shell
-docker-compose up -d
+docker compose up -d
 ```
 
 This will pull the required images from docker hub, and then start them.
@@ -127,12 +127,12 @@ This will pull the required images from docker hub, and then start them.
 To stop the docker environment, run:
 
 ```shell
-docker-compose down
+docker compose down
 ```
 
 If you make changes to docker-compose.yml you may want to ensure that old volumes etc. are removed:
 ```shell
-docker-compose down --remove-orphans -v
+docker volume prune --all
 ```
 
 ### Gotchas
@@ -156,20 +156,20 @@ tweaking to the environment settings for the `st2chatops` service in `docker-com
 
 * The git status output on the `!packs get` command doesn't appear to work fully.
 
-* Use `docker-compose logs st2chatops` to check the chatops logs if you are having problems getting chatops to work
+* Use `docker compose logs st2chatops` to check the chatops logs if you are having problems getting chatops to work
 
 ## Regular Usage
 
 To run st2 commands, you can use the st2client service:
 
 ```shell
-docker-compose exec st2client st2 <st2 command>
+docker compose exec st2client st2 <st2 command>
 ```
 
 Example:
 
 ```shell
-$ docker-compose exec st2client st2 run core.echo message=hello
+$ docker compose exec st2client st2 run core.echo message=hello
 .
 id: 5eb30d77afe5aa8493f31187
 action.ref: core.echo
@@ -187,12 +187,12 @@ result:
   succeeded: true
 ```
 
-Alternatively, you could run `docker-compose exec st2client bash` to be dropped into a container with st2. At that point, you can just run `st2` commands.
+Alternatively, you could run `docker compose exec st2client bash` to be dropped into a container with st2. At that point, you can just run `st2` commands.
 
 Example:
 
 ```shell
-$ docker-compose exec st2client bash
+$ docker compose exec st2client bash
 Welcome to StackStorm v3.3.0 (Ubuntu 18.04.4 LTS GNU/Linux x86_64)
  * Documentation: https://docs.stackstorm.com/
  * Community: https://stackstorm.com/community-signup
@@ -229,7 +229,7 @@ Pack configs will be in `/opt/stackstorm/configs/$PACKNAME`, which is a docker v
 ### Use st2 pack config
 
 ```shell
-$ docker-compose exec st2client st2 pack config git
+$ docker compose exec st2client st2 pack config git
 repositories[0].url: https://github.com/StackStorm/st2-dockerfiles.git
 repositories[0].branch [master]:
 ~~~ Would you like to add another item to  "repositories" array / list? [y]: n
@@ -256,10 +256,10 @@ Do you want me to save it? [y]: y
 
 ### Copy a config file into a container
 
-First, find the actual container name of st2api by running `docker-compose ps st2api`.
+First, find the actual container name of st2api by running `docker compose ps st2api`.
 
 ```shell
-$ docker-compose ps st2api
+$ docker compose ps st2api
       Name                    Command               State    Ports
 --------------------------------------------------------------------
 compose_st2api_1   /opt/stackstorm/st2/bin/st ...   Up      9101/tcp
@@ -276,7 +276,7 @@ docker cp git.yaml compose_st2api_1:/opt/stackstorm/configs/git.yaml
 If you used `docker cp` to copy the config in, you will need to manually load that configuration. The st2client service does not need access to the configs directory, as it will talk to st2api.
 
 ```shell
-$ docker-compose exec st2client st2 run packs.load packs=git register=configs
+$ docker compose exec st2client st2 run packs.load packs=git register=configs
 .
 id: 5eb3171c566aa824ea88f538
 action.ref: packs.load
@@ -303,7 +303,7 @@ If you are working on a development pack, you will need to register it and insta
 
 ### packs.dev directory
 
-As mentioned above, your default `packs.dev` directory is relative to your `docker-compose.yml` file. However, if you start developing here, git will not like being inside another git directory. You will want to set `ST2_PACKS_DEV` to a directory outside of `st2-docker` and restart the docker-compose services.
+As mentioned above, your default `packs.dev` directory is relative to your `docker-compose.yml` file. However, if you start developing here, git will not like being inside another git directory. You will want to set `ST2_PACKS_DEV` to a directory outside of `st2-docker` and restart the docker compose services.
 
 Example: We have a pack called helloworld in `packs.dev/helloworld`. The directory name has to match the pack name. So even if you have a git repo named "st2-helloworld", it should be cloned locally as "helloworld".
 
@@ -378,10 +378,10 @@ result:
 
 # Remove everything
 
-If you want to uninstall, or start from a "clean" installation, docker-compose can remove all the containers and volumes in one command.
+If you want to uninstall, or start from a "clean" installation, docker compose can remove all the containers and volumes in one command.
 
 ```shell
-docker-compose down --remove-orphans -v
+docker compose down --remove-orphans -v
 ```
 
 # Testing
@@ -391,10 +391,10 @@ A "sidecar" like container loads the BATS libraries and binaries into a st2clien
 
 To run the tests
 ```shell
-docker-compose -f tests/st2tests.yaml up
+docker compose -f tests/st2tests.yaml up
 ```
 
 To do a clean teardown
 ```shell
-docker-compose -f tests/st2tests.yaml down -v
+docker compose -f tests/st2tests.yaml down -v
 ```
