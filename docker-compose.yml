@@ -176,6 +176,8 @@ services:
       - stackstorm-packs:/opt/stackstorm/packs:ro
       - stackstorm-packs-configs:/opt/stackstorm/configs:ro
       - ${ST2_PACKS_DEV:-./packs.dev}:/opt/stackstorm/packs.dev:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   st2timersengine:
     image: ${ST2_IMAGE_REPO:-stackstorm/}st2timersengine:${ST2_VERSION:-latest}
     restart: on-failure
@@ -270,16 +272,6 @@ services:
       - private
     volumes:
       - stackstorm-redis:/data
-  snpseq-tester:
-    build:
-      context: ../
-      dockerfile: st2-docker/files/Dockerfile.snpseq-tester
-    networks:
-      - private
-    volumes:
-      - "./files/nginx.snpseq-tester.conf:/etc/nginx/nginx.conf"
-      - stackstorm-data:/data
-      - stackstorm-ssh:/mnt/ssh
 volumes:
     stackstorm-mongodb:
     stackstorm-rabbitmq:
