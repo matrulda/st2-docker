@@ -124,7 +124,6 @@ services:
       # Action runner needs access to keys since action definitions (Jinja
       # templates) can reference secrets
       - stackstorm-keys:/etc/st2/keys:ro
-      - ./scripts/snpseq/st2actionrunner-snpseq.sh:/st2actionrunner-snpseq.sh
       - stackstorm-data:/mnt/samplesheet_processning:ro
     # Note: on some environments, there may be connectivity issues between containers.
     # In this case, try uncommenting the following line and restarting with docker-compose.
@@ -218,7 +217,7 @@ services:
       - ${ST2_PACKS_DEV:-./packs.dev}:/opt/stackstorm/packs.dev:rw
       - ./files/st2-cli.conf:/root/.st2/config
       - ./scripts/st2client-startup.sh:/st2client-startup.sh
-      - ./scripts/snpseq/st2client-snpseq.sh:/st2client-snpseq.sh
+      - ./scripts/test_packs/st2client.sh:/st2client.sh
       - stackstorm-ssh:/home/stanley/.ssh
       - stackstorm-data:/mnt/samplesheet_processning:ro
     extra_hosts:
