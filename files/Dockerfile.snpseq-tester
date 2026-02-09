@@ -37,7 +37,12 @@ RUN mkdir -p /data/scratch
 RUN mkdir -p /data/uppmax_project/incoming/staging/reports
 RUN mkdir -p /data/uppmax_project/incoming/staging/test_runfolder/seqreports
 RUN mkdir -p /data/uppmax_project/incoming/staging/test_runfolder/MD5
+RUN mkdir -p /data/uppmax_project/incoming/staging/test_runfolder/InterOp
+RUN mkdir -p /data/uppmax_project/incoming/staging/test_runfolder/Unaligned
+RUN mkdir -p /data/uppmax_project/incoming/staging/test_runfolder/Unaligned/Stats
 COPY tests/test_data/runfolders/210415_A00001_0123_BXYZ321XY/MD5/checksums.md5 /data/uppmax_project/incoming/staging/test_runfolder/MD5
+COPY tests/test_data/runfolders/210415_A00001_0123_BXYZ321XY/Unaligned /data/uppmax_project/incoming/staging/test_runfolder
+COPY tests/test_data/runfolders/210415_A00001_0123_BXYZ321XY/Unaligned/Stats/IndexMetricsOut.bin /data/uppmax_project/incoming/staging/test_runfolder/Unaligned/Stats
 RUN mkdir -p /data/snpseq-tester/runfolders/Arkiverade
 RUN mkdir -p /data/olink
 RUN mkdir -p /var/log/nginx/
