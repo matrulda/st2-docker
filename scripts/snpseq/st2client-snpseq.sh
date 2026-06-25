@@ -17,8 +17,6 @@ st2 run packs.load packs=snpseq_packs register=all
 
 ## Make virtualenv for snpseq_packs
 st2 run packs.setup_virtualenv packs=snpseq_packs
-#Refer: https://levelup.gitconnected.com/fix-attributeerror-module-lib-has-no-attribute-openssl-521a35d83769
-/opt/stackstorm/virtualenvs/snpseq_packs/bin/pip install cryptography==38.0.4 
 
 # Create symlink to dummy pack config
 ln -fs /opt/stackstorm/packs.dev/snpseq_packs.yaml /opt/stackstorm/configs/snpseq_packs.yaml
